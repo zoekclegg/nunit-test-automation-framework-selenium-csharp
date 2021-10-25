@@ -2,21 +2,23 @@
 using AventStack.ExtentReports.Reporter;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
-using System;
 using System.IO;
 
 namespace AutomateNowDemo.Test.Base
 {
-    public abstract class BaseTest
+    [SetUpFixture]
+    public abstract class ExtentReportGeneration
     {
         protected ExtentReports _extent;
         protected ExtentTest _test;
-        public IWebDriver driver;
-
-
+        public IWebDriver _driver;
         [OneTimeSetUp]
         protected void Setup()
         {
@@ -37,24 +39,14 @@ namespace AutomateNowDemo.Test.Base
         {
             _extent.Flush();
         }
-
-
-
         [SetUp]
-        public void StartBrowser()
+        public void BeforeTest()
         {
-            // Something to read the correct driver to use from a properties file?
             _test = _extent.CreateTest(TestContext.CurrentContext.Test.Name);
-            _test.Log(Status.Info, "Test started");
-            driver = new ChromeDriver("C:\\Users\\zcleg\\OneDrive\\Documents\\Automation\\AutomateNowDemo\\Main\\Resources");
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            driver.Url = "https://automatenow.io/sandbox-automation-testing-practice-website/";
-            _test.Log(Status.Pass, "Browser opened");
-            driver.Manage().Window.Maximize();
+            _test.Log(Status.Info, "Test starter");
         }
-
         [TearDown]
-        public void CloseBrowser()
+        public void AfterTest()
         {
             var status = TestContext.CurrentContext.Result.Outcome.Status;
             var stacktrace = string.IsNullOrEmpty(TestContext.CurrentContext.Result.StackTrace) ? ""
@@ -65,10 +57,10 @@ namespace AutomateNowDemo.Test.Base
                 case TestStatus.Failed:
                     logstatus = Status.Fail;
                     DateTime time = DateTime.Now;
-                    String fileName = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
-                    String screenShotPath = Capture(driver, fileName);
+                    String fileName = "Screenshot_" +time.ToString("h_mm_ss") + ".png";
+                    String screenShotPath = Capture(_driver, fileName);
                     _test.Log(Status.Fail, "Fail");
-                    _test.Log(Status.Fail, "Snapshot below: " + _test.AddScreenCaptureFromPath("Screenshots\\" + fileName));
+                    _test.Log(Status.Fail, "Snapshot below: " +_test.AddScreenCaptureFromPath("Screenshots\\" +fileName));
                     break;
                 case TestStatus.Inconclusive:
                     logstatus = Status.Warning;
@@ -82,8 +74,6 @@ namespace AutomateNowDemo.Test.Base
             }
             _test.Log(logstatus, "Test status: " + logstatus + stacktrace);
             _extent.Flush();
-
-            driver.Close();
         }
 
         public static string Capture(IWebDriver driver, String screenShotName)
@@ -94,7 +84,7 @@ namespace AutomateNowDemo.Test.Base
             var actualPath = pth.Substring(0, pth.LastIndexOf("bin"));
             var reportPath = new Uri(actualPath).LocalPath;
             Directory.CreateDirectory(reportPath + "Reports\\" + "Screenshots");
-            var finalpth = pth.Substring(0, pth.LastIndexOf("bin")) + "Reports\\Screenshots\\" + screenShotName;
+            var finalpth = pth.Substring(0, pth.LastIndexOf("bin")) + "Reports\\Screenshots\\" +screenShotName;
             var localpath = new Uri(finalpth).LocalPath;
             screenshot.SaveAsFile(localpath, ScreenshotImageFormat.Png);
             return reportPath;

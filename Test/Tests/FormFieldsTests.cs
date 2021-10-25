@@ -1,6 +1,7 @@
 ﻿using AutomateNowDemo.Test.Base;
 using AutomateNowDemo.Main.Pages;
 using NUnit.Framework;
+using AventStack.ExtentReports;
 
 namespace AutomateNowDemo
 {
@@ -13,7 +14,7 @@ namespace AutomateNowDemo
         {
             HomePage homePage = new HomePage(driver);
             homePage.ClickFormFieldsButton();
-            // Some logging to confirm page navigation
+            _test.Log(Status.Pass, "Navigated to Form Fields page");
         }
 
         [Test]
@@ -21,7 +22,9 @@ namespace AutomateNowDemo
         {
             FormFieldsPage formFieldsPage = new FormFieldsPage(driver);
             formFieldsPage.InputTextIntoInputField("Some text");
+            _test.Log(Status.Pass, "Input Text inputted");
             formFieldsPage.ClickSubmitButton();
+            _test.Log(Status.Pass, "Form submitted");
             Assert.That(formFieldsPage.VerifyInputFieldText("Some text"));
         }
     }
