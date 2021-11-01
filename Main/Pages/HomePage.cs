@@ -16,9 +16,18 @@ namespace AutomateNowDemo.Main.Pages
         [CacheLookup]
         private IWebElement FormFieldsButton;
 
+        [FindsBy(How = How.LinkText, Using = "Popups")]
+        [CacheLookup]
+        private IWebElement PopupsButton;
+
         public void ClickFormFieldsButton()
         {
             FormFieldsButton.Click();
+        }
+
+        public void ClickPopupsButton()
+        {
+            PopupsButton.Click();
         }
     }
 }

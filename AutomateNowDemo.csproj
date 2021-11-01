@@ -78,13 +78,18 @@
     <Reference Include="WebDriver.Support, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Selenium.Support.3.141.0\lib\net45\WebDriver.Support.dll</HintPath>
     </Reference>
+    <Reference Include="WebDriverManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\WebDriverManager.2.12.2\lib\net45\WebDriverManager.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main\Pages\FormFieldsPage.cs" />
     <Compile Include="Main\Pages\HomePage.cs" />
+    <Compile Include="Main\Pages\PopupsPage.cs" />
     <Compile Include="Test\Base\BaseTest.cs" />
     <Compile Include="Test\Base\ExtentReportGeneration.cs" />
     <Compile Include="Test\Tests\FormFieldsTests.cs" />
+    <Compile Include="Test\Tests\PopupsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="license" />

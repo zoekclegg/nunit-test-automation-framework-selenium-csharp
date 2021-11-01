@@ -4,52 +4,50 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
 using System;
 using System.IO;
 
-namespace AutomateNowDemo.Test.Base
+namespace AutomateNowDemo
 {
+
     public abstract class BaseTest
     {
-        protected ExtentReports _extent;
-        protected ExtentTest _test;
+        
+        public static ExtentTest test;
         public IWebDriver driver;
+        public static ExtentReports extent;
 
-
-        [OneTimeSetUp]
-        protected void Setup()
-        {
-            var path = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
-            var actualPath = path.Substring(0, path.LastIndexOf("bin"));
-            var projectPath = new Uri(actualPath).LocalPath;
-            Directory.CreateDirectory(projectPath.ToString() + "Reports");
-            var reportPath = projectPath + "Reports\\ExtentReport.html";
-            var htmlReporter = new ExtentHtmlReporter(reportPath);
-            _extent = new ExtentReports();
-            _extent.AttachReporter(htmlReporter);
-            _extent.AddSystemInfo("Host Name", "LocalHost");
-            _extent.AddSystemInfo("Environment", "QA");
-            _extent.AddSystemInfo("UserName", "TestUser");
-        }
-        [OneTimeTearDown]
-        protected void TearDown()
-        {
-            _extent.Flush();
-        }
-
-
+        [SetUpFixture]
+        public class OneTimeSetup
+            {
+            
+            [OneTimeSetUp]
+            public static void Setup()
+            {
+                var path = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
+                var actualPath = path.Substring(0, path.LastIndexOf("bin"));
+                var projectPath = new Uri(actualPath).LocalPath;
+                Directory.CreateDirectory(projectPath.ToString() + "Reports");
+                var reportPath = projectPath + "Reports\\ExtentReport.html";
+                var htmlReporter = new ExtentHtmlReporter(reportPath);
+                extent = new ExtentReports();
+                extent.AttachReporter(htmlReporter);
+                extent.AddSystemInfo("Host Name", "LocalHost");
+                extent.AddSystemInfo("Environment", "QA");
+                extent.AddSystemInfo("UserName", "TestUser"); 
+            }
+       }
 
         [SetUp]
         public void StartBrowser()
         {
             // Something to read the correct driver to use from a properties file?
-            _test = _extent.CreateTest(TestContext.CurrentContext.Test.Name);
-            _test.Log(Status.Info, "Test started");
+            test = extent.CreateTest(TestContext.CurrentContext.Test.Name);
+            test.Log(Status.Info, "Test started");
             driver = new ChromeDriver("C:\\Users\\zcleg\\OneDrive\\Documents\\Automation\\AutomateNowDemo\\Main\\Resources");
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             driver.Url = "https://automatenow.io/sandbox-automation-testing-practice-website/";
-            _test.Log(Status.Pass, "Browser opened");
+            test.Log(Status.Pass, "Browser opened");
             driver.Manage().Window.Maximize();
         }
 
@@ -58,7 +56,7 @@ namespace AutomateNowDemo.Test.Base
         {
             var status = TestContext.CurrentContext.Result.Outcome.Status;
             var stacktrace = string.IsNullOrEmpty(TestContext.CurrentContext.Result.StackTrace) ? ""
-: string.Format("{ 0}", TestContext.CurrentContext.Result.StackTrace);
+: string.Format("{{ 0}}", TestContext.CurrentContext.Result.StackTrace);
             Status logstatus;
             switch (status)
             {
@@ -67,8 +65,8 @@ namespace AutomateNowDemo.Test.Base
                     DateTime time = DateTime.Now;
                     String fileName = "Screenshot_" + time.ToString("h_mm_ss") + ".png";
                     String screenShotPath = Capture(driver, fileName);
-                    _test.Log(Status.Fail, "Fail");
-                    _test.Log(Status.Fail, "Snapshot below: " + _test.AddScreenCaptureFromPath("Screenshots\\" + fileName));
+                    test.Log(Status.Fail, "Fail");
+                    test.Log(Status.Fail, "Snapshot below: " + test.AddScreenCaptureFromPath("Screenshots\\" + fileName));
                     break;
                 case TestStatus.Inconclusive:
                     logstatus = Status.Warning;
@@ -80,10 +78,10 @@ namespace AutomateNowDemo.Test.Base
                     logstatus = Status.Pass;
                     break;
             }
-            _test.Log(logstatus, "Test status: " + logstatus + stacktrace);
-            _extent.Flush();
-
+            test.Log(logstatus, "Test status: " + logstatus + stacktrace);
             driver.Close();
+
+            extent.Flush();
         }
 
         public static string Capture(IWebDriver driver, String screenShotName)

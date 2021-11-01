@@ -14,7 +14,7 @@ namespace AutomateNowDemo
         {
             HomePage homePage = new HomePage(driver);
             homePage.ClickFormFieldsButton();
-            _test.Log(Status.Pass, "Navigated to Form Fields page");
+            test.Log(Status.Pass, "Navigated to Form Fields page");
         }
 
         [Test]
@@ -22,10 +22,11 @@ namespace AutomateNowDemo
         {
             FormFieldsPage formFieldsPage = new FormFieldsPage(driver);
             formFieldsPage.InputTextIntoInputField("Some text");
-            _test.Log(Status.Pass, "Input Text inputted");
+            test.Log(Status.Pass, "Input Text inputted");
             formFieldsPage.ClickSubmitButton();
-            _test.Log(Status.Pass, "Form submitted");
+            test.Log(Status.Pass, "Form submitted");
             Assert.That(formFieldsPage.VerifyInputFieldText("Some text"));
         }
+
     }
 }

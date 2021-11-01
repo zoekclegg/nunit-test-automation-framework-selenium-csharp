@@ -7,3 +7,4 @@ This is an NUnit automation framework built using Selenium and C# which uses a p
 - C#
 - Selenium
 - NUnit
+- Extent Reports
