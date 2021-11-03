@@ -64,14 +64,14 @@ namespace AutomateNowDemo.Main.Pages
             return InputField.Displayed;
         }
 
-        public void ClickCheckBox(int option)
+        public void ClickCheckBox(string option)
         {
-            driver.FindElement(By.XPath("//input[@value='Option " + option + "']")).Click();
+            driver.FindElement(By.XPath($"//input[@value='Option {option}']")).Click();
         }
 
         public void ClickRadioButton(String option)
         {
-            driver.FindElement(By.XPath("//input[@value='" + option + "']")).Click();
+            driver.FindElement(By.XPath($"//input[@value='{option}']")).Click();
         }
 
         public void SelectDropdownOption(String option)

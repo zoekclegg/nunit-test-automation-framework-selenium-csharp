@@ -13,7 +13,7 @@ namespace AutomateNowDemo
         public void NavigateToPopupsPage()
         {
             HomePage homePage = new HomePage(driver);
-            homePage.ClickPopupsButton();
+            homePage.ClickNavButton("Popups");
             test.Log(Status.Pass, "Navigated to Popups page");
         }
 
@@ -53,15 +53,16 @@ namespace AutomateNowDemo
         }
 
         [Test]
-        public void VerifyPromptPopupText()
+        [TestCase("Zoe")]
+        public void VerifyPromptPopupText(string name)
         {
             PopupsPage popupsPage = new PopupsPage(driver);
             popupsPage.ClickPromptButton();
             test.Log(Status.Pass, "Prompt button clicked");
-            popupsPage.InputAlertText("Zoe");
+            popupsPage.InputAlertText(name);
             popupsPage.AcceptAlert();
             test.Log(Status.Pass, "Popup accepted");
-            Assert.That(popupsPage.GetPromptText().Equals("Nice to meet you Zoe!"));
+            Assert.That(popupsPage.GetPromptText().Equals($"Nice to meet you {name}!"));
             test.Log(Status.Pass, "Prompt popup text verified");
         }
 

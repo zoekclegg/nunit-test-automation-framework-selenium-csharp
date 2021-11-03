@@ -12,22 +12,9 @@ namespace AutomateNowDemo.Main.Pages
             PageFactory.InitElements(driver, this);
         }
 
-        [FindsBy(How = How.LinkText, Using ="Form Fields")]
-        [CacheLookup]
-        private IWebElement FormFieldsButton;
-
-        [FindsBy(How = How.LinkText, Using = "Popups")]
-        [CacheLookup]
-        private IWebElement PopupsButton;
-
-        public void ClickFormFieldsButton()
+        public void ClickNavButton(string text)
         {
-            FormFieldsButton.Click();
-        }
-
-        public void ClickPopupsButton()
-        {
-            PopupsButton.Click();
+            driver.FindElement(By.LinkText(text)).Click();
         }
     }
 }
