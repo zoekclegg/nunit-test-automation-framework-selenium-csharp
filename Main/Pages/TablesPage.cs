@@ -27,6 +27,14 @@ namespace AutomateNowDemo.Main.Pages
         [CacheLookup]
         private IList<IWebElement> TableColumns;
 
+        [FindsBy(How = How.XPath, Using = "//select[@name='tablepress-1_length']")]
+        [CacheLookup]
+        private IWebElement CountFilter;
+
+        [FindsBy(How = How.XPath, Using = "//div[@id='tablepress-1_info']")]
+        [CacheLookup]
+        private IWebElement TableInfo;
+
         public void InputTextInSearchField(String text)
         {
             SearchField.SendKeys(text);
@@ -38,17 +46,18 @@ namespace AutomateNowDemo.Main.Pages
             int NumColumns = TableColumns.Count;
             int row, column, match;
             bool result = true;
-            for(row=1; row <= NumRows; row++)
+            for (row = 1; row <= NumRows; row++)
             {
                 match = 0;
-                for(column=1; column <= NumColumns; column++)
+                for (column = 1; column <= NumColumns; column++)
                 {
                     if (driver.FindElement(By.XPath($"//tbody[@class='row-hover']/tr[{row}]/td[{column}]")).Text.Contains(text))
                     {
                         match++;
                     }
                 }
-                if (match == 0) {
+                if (match == 0)
+                {
                     result = false;
                     break;
                 }
@@ -56,5 +65,40 @@ namespace AutomateNowDemo.Main.Pages
             return result;
         }
 
+        public void SelectCountFilter(string count)
+        {
+            SelectElement CountDropdown = new SelectElement(CountFilter);
+            CountDropdown.SelectByText(count);
+        }
+
+        public int GetVisibleRowCount()
+        {
+            return TableRows.Count;
+        }
+
+        public int GetTotalCount()
+        {
+            int StartIndex = TableInfo.Text.IndexOf("of ") + 3;
+            int Length = TableInfo.Text.Length - StartIndex - 7;
+            return Convert.ToInt32(TableInfo.Text.Substring(StartIndex, Length));
+        }
+
+        public void SortColumn(int column)
+        {
+            driver.FindElement(By.XPath($"//table[@id='tablepress-1']//th[{column}]")).Click();
+        }
+
+        public List<string> GetVisibleColumnResults(int column)
+        {
+            int NumRows = TableRows.Count;
+            int row;
+            List<string> results = new List<string> { };
+            for (row = 1; row <= NumRows; row++)
+            {
+                results.Add(driver.FindElement(By.XPath($"//tbody[@class='row-hover']/tr[{row}]/td[{column}]")).Text);
+            }
+            return results;
+        }
     }
+
 }
