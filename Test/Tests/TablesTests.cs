@@ -53,7 +53,7 @@ namespace AutomateNowDemo
         }
 
         [Test]
-        [TestCase(3)]
+        [TestCase(2)]
         public void VerifySort(int column)
         {
             TablesPage tablesPage = new TablesPage(driver);

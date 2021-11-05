@@ -85,11 +85,13 @@
   <ItemGroup>
     <Compile Include="Main\Pages\FormFieldsPage.cs" />
     <Compile Include="Main\Pages\HomePage.cs" />
+    <Compile Include="Main\Pages\ModalsPage.cs" />
     <Compile Include="Main\Pages\PopupsPage.cs" />
     <Compile Include="Main\Pages\TablesPage.cs" />
     <Compile Include="Test\Base\BaseTest.cs" />
     <Compile Include="Test\Base\ExtentReportGeneration.cs" />
     <Compile Include="Test\Tests\FormFieldsTests.cs" />
+    <Compile Include="Test\Tests\ModalsTests.cs" />
     <Compile Include="Test\Tests\PopupsTests.cs" />
     <Compile Include="Test\Tests\TablesTests.cs" />
   </ItemGroup>
